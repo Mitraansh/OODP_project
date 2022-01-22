@@ -2154,7 +2154,7 @@ void Library::returnBook()
 }
 
 /*================================================================================*/
-//FACULTY MANAGEMENT ----> SWARNAVA & JYOTEERMAYA
+//FACULTY MANAGEMENT ---->
 class teacher
 {
 	int a;
