@@ -1,25 +1,23 @@
-#include<bits/stdc++.h>
-#include<fstream>
-#include<iomanip>
-#include<cstdio>
-#include<cstdlib>
-#include<cstring>
-#include<conio.h>
-#include<stdio.h>
-#include<limits.h>
+#include <bits/stdc++.h>
+#include <fstream>
+#include <iomanip>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <conio.h>
+#include <stdio.h>
+#include <limits.h>
 #include "header.h"
 #define FLBSTUD "student.txt"
 #define FLBGRAD "grade.txt"
 using namespace std;
 fstream fil;
 
-
-
 /*================================================================================*/
 /* STUDENT SECTION ------->>  */
 class Student
 {
-	int title;  //Master  = 1, Mr = 2, Miss = 3
+	int title; // Master  = 1, Mr = 2, Miss = 3
 	char studentName[30];
 	int rollNo;
 	int classop1;
@@ -27,11 +25,11 @@ class Student
 	char motherName[30];
 	char address[80];
 	char bloodGroup[4];
-public:
 
+public:
 	void getDetails();
 
-	char* strTitle(int x)  	//Converting Title from Integer to readable text
+	char *strTitle(int x) // Converting Title from Integer to readable text
 	{
 		static char title[8] = " ";
 		if (x == 1)
@@ -52,11 +50,12 @@ public:
 		cout << "Address       : " << address << endl;
 		cout << "Blood Group   : " << bloodGroup << endl;
 	}
-	int retRollNo() {				//Return Roll No
+	int retRollNo()
+	{ // Return Roll No
 		return rollNo;
 	}
-	char* retString(char x)
-	{		//Return all strings avaialable from the Student Class
+	char *retString(char x)
+	{ // Return all strings avaialable from the Student Class
 		if (x == 'T')
 			return strTitle(title);
 		if (x == 'N')
@@ -70,7 +69,8 @@ public:
 		if (x == 'B')
 			return bloodGroup;
 	}
-	char* retStudentName() {		//Returns Student Name
+	char *retStudentName()
+	{ // Returns Student Name
 		return retString('N');
 	}
 };
@@ -79,38 +79,45 @@ void Student::getDetails()
 {
 	CLS();
 	cout << "Enter Title \n(Master = 1, Mr = 2, Miss = 3)  : ";
-	do {
+	do
+	{
 		title = scan();
 	} while (title != 1 && title != 2 && title != 3);
 
 	cout << "Enter Student's Name        : ";
-	do {
+	do
+	{
 		gets(studentName);
 	} while (strlen(studentName) == 0);
 	cout << "Enter Roll No.            : ";
-	do {
+	do
+	{
 		rollNo = scan();
 	} while (rollNo < 1);
 	cout << "Enter Father's Name         : ";
-	do {
+	do
+	{
 		gets(fatherName);
 	} while (strlen(fatherName) == 0);
 	cout << "Enter Mother's Name         : ";
-	do {
+	do
+	{
 		gets(motherName);
 	} while (strlen(motherName) == 0);
 	cout << "Enter Address             : ";
-	do {
+	do
+	{
 		gets(address);
 	} while (strlen(address) == 0);
 
 	cout << "Enter Blood Group [eg. B+]: ";
-	do {
+	do
+	{
 		gets(bloodGroup);
 	} while (strlen(bloodGroup) == 0);
 }
 
-void insertStudent()			//Insert Student Record in File
+void insertStudent() // Insert Student Record in File
 {
 	CLS();
 	Student obj, obj2;
@@ -120,22 +127,22 @@ void insertStudent()			//Insert Student Record in File
 	obj.getDetails();
 	fstream fl1(FLBSTUD, ios::in | ios::binary);
 	ofstream fl2;
-	if (!fl1)			//If file does not exist, create new file
+	if (!fl1) // If file does not exist, create new file
 	{
 		fl2.open(FLBSTUD, ios::out | ios::binary);
-		fl2.write((char*)& obj, sizeof(obj));
+		fl2.write((char *)&obj, sizeof(obj));
 		fl2.close();
 		cout << "Record successfully inserted !\n";
 		return;
 	}
 	while (!fl1.eof())
 	{
-		fl1.read((char*)& obj2, sizeof(obj));
+		fl1.read((char *)&obj2, sizeof(obj));
 		if (fl1.eof())
 		{
 			break;
 		}
-		if (obj.retRollNo() == obj2.retRollNo())		//If record with same Roll No. exists, then abort insertion
+		if (obj.retRollNo() == obj2.retRollNo()) // If record with same Roll No. exists, then abort insertion
 		{
 			cout << "Record with same Roll No. with following details already exists : \n";
 			obj2.printDetails();
@@ -144,7 +151,7 @@ void insertStudent()			//Insert Student Record in File
 		}
 		else if (strcmpi(obj.retStudentName(), obj2.retStudentName()) == 0)
 		{
-			if (!v)							//Warns user that Record with same name exists
+			if (!v) // Warns user that Record with same name exists
 				cout << "Warning : Record with same name exists with follwing details : \n";
 			obj2.printDetails();
 			cout << '\n';
@@ -154,38 +161,38 @@ void insertStudent()			//Insert Student Record in File
 	if (v)
 	{
 		cout << "Do you still wish to insert record (Y/N) ? ";
-		do {									//Asks for user confirmation after warning
+		do
+		{ // Asks for user confirmation after warning
 			cin >> ch;
 			ch = toupper(ch);
 		} while (ch != 'Y' && ch != 'N');
-		if (ch == 'N') {
+		if (ch == 'N')
+		{
 			cout << "Insertion Aborted !\n";
 			return;
 		}
 	}
 	fl2.open(FLBSTUD, ios::out | ios::app | ios::binary);
 	fl2.seekp(0, ios::end);
-	fl2.write((char*)& obj, sizeof(obj));
+	fl2.write((char *)&obj, sizeof(obj));
 	fl2.close();
 	cout << "Record Inserted successfully !\n";
 }
 
-
-
-int dispStudentRecord()		//Display all Student Records
+int dispStudentRecord() // Display all Student Records
 {
 	CLS();
 	Student obj;
 	int v = 0;
 	fstream fl(FLBSTUD, ios::in | ios::binary);
 	if (!fl)
-	{					//If file does not exist
+	{ // If file does not exist
 		cout << "Empty Records !\n";
 		return 0;
 	}
 	while (!fl.eof())
 	{
-		fl.read((char*)& obj, sizeof(obj));
+		fl.read((char *)&obj, sizeof(obj));
 		if (fl.eof())
 			break;
 		v = 1;
@@ -198,8 +205,6 @@ int dispStudentRecord()		//Display all Student Records
 	return v;
 }
 
-
-
 int searchByRollNo(int i)
 {
 	CLS();
@@ -209,13 +214,14 @@ int searchByRollNo(int i)
 	cout << "Enter Roll No. to search for : ";
 	cin >> r;
 	fstream fl(FLBSTUD, ios::in | ios::binary);
-	if (!fl) {					//No file exists
+	if (!fl)
+	{ // No file exists
 		cout << "No Records Found !\n";
 		return 0;
 	}
 	while (!fl.eof())
 	{
-		fl.read((char*)& obj, sizeof(obj));
+		fl.read((char *)&obj, sizeof(obj));
 		if (fl.eof())
 		{
 			break;
@@ -236,12 +242,10 @@ int searchByRollNo(int i)
 	return found;
 }
 
-
-
 void delStudentRecord()
 {
 	CLS();
-	Student obj;					//Writes to new file except record to be deleted
+	Student obj; // Writes to new file except record to be deleted
 	int f = 0;
 	cout << "\nEnter Roll No. to delete : ";
 	int r;
@@ -251,7 +255,7 @@ void delStudentRecord()
 	fstream fo("temp.dat", ios::out | ios::binary);
 	while (!fl.eof())
 	{
-		fl.read((char*)& obj, sizeof(obj));
+		fl.read((char *)&obj, sizeof(obj));
 
 		if (fl.eof())
 			break;
@@ -261,7 +265,8 @@ void delStudentRecord()
 			cout << "Record with following info will be deleted :\n\n";
 			obj.printDetails();
 			cout << "Do you wish to continue ? (Y/N) : ";
-			do {
+			do
+			{
 				cin >> ch;
 				ch = toupper(ch);
 			} while (ch != 'N' && ch != 'Y');
@@ -277,7 +282,7 @@ void delStudentRecord()
 			f = 1;
 			continue;
 		}
-		fo.write((char*)& obj, sizeof(obj));
+		fo.write((char *)&obj, sizeof(obj));
 	}
 	fl.close();
 	fo.close();
@@ -289,17 +294,17 @@ void delStudentRecord()
 		cout << "No Such Record Exists !\n";
 }
 
-
 /*================================================================================*/
-//GRADING SYSTEM ------------->>
+// GRADING SYSTEM ------------->>
 
 class Grade
 {
 private:
-	char  name[30];
-	int   rollNo;
-	int   total;
+	char name[30];
+	int rollNo;
+	int total;
 	float perc;
+
 public:
 	int retRollNo()
 	{
@@ -356,7 +361,7 @@ void Grade::putDetails(void)
 	retGrade(perc);
 }
 
-void insertGrade()			//Insert Grade  in File
+void insertGrade() // Insert Grade  in File
 {
 	system("CLS");
 	Grade obj, obj2;
@@ -368,7 +373,7 @@ void insertGrade()			//Insert Grade  in File
 	if (!gl1)
 	{
 		gl2.open(FLBGRAD, ios::out | ios::binary);
-		gl2.write((char*)& obj, sizeof(obj));
+		gl2.write((char *)&obj, sizeof(obj));
 		gl2.close();
 		cout << "Grade successfully inserted !\n";
 		return;
@@ -376,27 +381,25 @@ void insertGrade()			//Insert Grade  in File
 
 	gl2.open(FLBGRAD, ios::out | ios::app | ios::binary);
 	gl2.seekp(0, ios::end);
-	gl2.write((char*)& obj, sizeof(obj));
+	gl2.write((char *)&obj, sizeof(obj));
 	gl2.close();
 	cout << "Grade Inserted successfully !\n";
 }
 
-
-
-int dispGrade()		//Display all Student Records
+int dispGrade() // Display all Student Records
 {
 	system("CLS");
 	Grade obj;
 	int v = 0;
 	fstream fl(FLBGRAD, ios::in | ios::binary);
 	if (!fl)
-	{					//If file does not exist
+	{ // If file does not exist
 		cout << "Empty Records !\n";
 		return 0;
 	}
 	while (!fl.eof())
 	{
-		fl.read((char*)& obj, sizeof(obj));
+		fl.read((char *)&obj, sizeof(obj));
 		if (fl.eof())
 			break;
 		v = 1;
@@ -418,13 +421,14 @@ int searchGradeByRollNo(int i)
 	cout << "Enter Roll No. to search for : ";
 	cin >> r;
 	fstream fl(FLBGRAD, ios::in | ios::binary);
-	if (!fl) {					//No file exists
+	if (!fl)
+	{ // No file exists
 		cout << "No Records Found !\n";
 		return 0;
 	}
 	while (!fl.eof())
 	{
-		fl.read((char*)& obj, sizeof(obj));
+		fl.read((char *)&obj, sizeof(obj));
 		if (fl.eof())
 		{
 			break;
@@ -446,20 +450,20 @@ int searchGradeByRollNo(int i)
 }
 
 /*================================================================================*/
-//PLACEMENT CELL ------->>
-// Students details class.
+// PLACEMENT CELL ------->>
+//  Students details class.
 class Students
 {
 	long roll;
 	float cgpa;
 	char sname[25];
+
 public:
 	void getSData();
 	long sroll();
 	float scgpa();
-	char* ssname();
+	char *ssname();
 };
-
 
 void Students::getSData()
 {
@@ -474,7 +478,6 @@ void Students::getSData()
 	cin >> cgpa;
 	fout << cgpa << endl;
 	fout.close();
-
 }
 long Students::sroll()
 {
@@ -486,7 +489,7 @@ float Students::scgpa()
 	return cgpa;
 }
 
-char* Students::ssname()
+char *Students::ssname()
 {
 	return sname;
 }
@@ -497,10 +500,11 @@ class company
 	char name[20];
 	int package;
 	float cgpa;
+
 public:
 	void getCData();
 	friend class Students;
-	char* cname();
+	char *cname();
 	int cpackage();
 	float ccgpa();
 };
@@ -513,14 +517,16 @@ void company::getCData()
 	fout << name << endl;
 	cout << "\n\nEnter the package (in LPA): ";
 	cin >> package;
-	fout << package; fout << endl;
+	fout << package;
+	fout << endl;
 	cout << "\n\nEnter CGPA required: ";
 	cin >> cgpa;
-	fout << endl << endl;
+	fout << endl
+		 << endl;
 	fout.close();
 }
 
-char* company::cname()
+char *company::cname()
 {
 	return name;
 }
@@ -537,15 +543,16 @@ float company::ccgpa()
 // Students qualified for placement
 class placement
 {
-	char* name;
-	char* cname;
+	char *name;
+	char *cname;
 	long rollnumber;
+
 public:
-	void putPlacementData(char* Name, char* Cname, long Rollnumber);
+	void putPlacementData(char *Name, char *Cname, long Rollnumber);
 	void getData();
 };
 
-void placement::putPlacementData(char* Name, char* Cname, long Rollnumber)
+void placement::putPlacementData(char *Name, char *Cname, long Rollnumber)
 {
 	name = Name;
 	cname = Cname;
@@ -584,7 +591,7 @@ public:
 	void returnBook();
 };
 
-//function to get details of book
+// function to get details of book
 void Library::getData()
 {
 	cin.ignore();
@@ -603,7 +610,7 @@ void Library::getData()
 	cin >> quantity;
 }
 
-//function to display details of book(s)
+// function to display details of book(s)
 void Library::showData()
 {
 	cout << "\n\t\tName of the book: " << book;
@@ -611,26 +618,29 @@ void Library::showData()
 	cout << "\n\n\t\tPublication's name: " << publication;
 	cout << "\n\n\t\tBook's ID: " << id;
 	cout << "\n\n\t\tPrice of the book: " << price;
-	cout << "\n\n\t\tNumber of books available: " << quantity << endl << endl;
+	cout << "\n\n\t\tNumber of books available: " << quantity << endl
+		 << endl;
 }
 
-//function to display the main menu
+// function to display the main menu
 void Library::mainMenu()
 {
 	int choice;
 	char ch;
 
-	do {
+	do
+	{
 		fflush(stdin);
 		CLS();
 		cout << "\t\t\t\t\t********** LIBRARY DETAILS **********\n\n";
 		cout << "\t\t\t\t\t>> Choose any option\n\n";
-		cout << "\t\t\t\t\t1. Student\n\n" <<
-			"\t\t\t\t\t2. Staff\n\n" <<
-			"\t\t\t\t\t0. Back To Main\n\n";
+		cout << "\t\t\t\t\t1. Student\n\n"
+			 << "\t\t\t\t\t2. Staff\n\n"
+			 << "\t\t\t\t\t0. Back To Main\n\n";
 		cout << "\t\t\t\t\tEnter choice: ";
 		cin >> choice;
-		cout << endl << endl;
+		cout << endl
+			 << endl;
 		switch (choice)
 		{
 		case 1:
@@ -648,17 +658,22 @@ void Library::mainMenu()
 	} while (choice != 0);
 }
 
-//function to display options for staff
+// function to display options for staff
 void Library::staff()
 {
 	CLS();
 	cout << "\t\t\t\t\t********** WELCOME STAFF **********\n\n";
 	cout << "\t\t\t\t\t>> Choose any option\n\n";
-	cout << "\t\t\t\t\t1. View Category of Books\n\n" << "\t\t\t\t\t2. Search for a Book\n\n" << "\t\t\t\t\t3. Modify Booklist\n\n" << "\t\t\t\t\t4. Go to Main Menu\n\n" << "\t\t\t\t\t5. Exit Application\n\n";
+	cout << "\t\t\t\t\t1. View Category of Books\n\n"
+		 << "\t\t\t\t\t2. Search for a Book\n\n"
+		 << "\t\t\t\t\t3. Modify Booklist\n\n"
+		 << "\t\t\t\t\t4. Go to Main Menu\n\n"
+		 << "\t\t\t\t\t5. Exit Application\n\n";
 	cout << "\t\t\t\t\tEnter choice: ";
 	int choice;
 	cin >> choice;
-	cout << endl << endl;
+	cout << endl
+		 << endl;
 	switch (choice)
 	{
 	case 1:
@@ -685,17 +700,21 @@ void Library::staff()
 	}
 }
 
-//function to display options for students
+// function to display options for students
 void Library::student()
 {
 	CLS();
 	cout << "\t\t\t\t\t********** WELCOME STUDENT **********\n\n";
 	cout << "\t\t\t\t\t>> Choose any option\n\n";
-	cout << "\t\t\t\t\t1. View Category of Books\n\n" << "\t\t\t\t\t2. Search for a Book\n\n" << "\t\t\t\t\t3. Go to Main Menu\n\n" << "\t\t\t\t\t4. Exit Application\n\n";
+	cout << "\t\t\t\t\t1. View Category of Books\n\n"
+		 << "\t\t\t\t\t2. Search for a Book\n\n"
+		 << "\t\t\t\t\t3. Go to Main Menu\n\n"
+		 << "\t\t\t\t\t4. Exit Application\n\n";
 	cout << "\t\t\t\t\tEnter choice: ";
 	int choice;
 	cin >> choice;
-	cout << endl << endl;
+	cout << endl
+		 << endl;
 	switch (choice)
 	{
 	case 1:
@@ -719,17 +738,25 @@ void Library::student()
 	}
 }
 
-//function to display a list of category of books available in the library
+// function to display a list of category of books available in the library
 int Library::booksCategory(int flag)
 {
 	CLS();
 	cout << "\t\t\t\t\t********** CATEGORY OF BOOKS **********\n\n";
 	cout << "\t\t\t\t\t>> Select a Category\n\n";
-	cout << "\t\t\t\t\t1. School of Computer Engineering\n\n" << "\t\t\t\t\t2. School of Electronics Engineering\n\n" << "\t\t\t\t\t3. School of Electrical Engineering\n\n" << "\t\t\t\t\t4. School of Mechanical Engineering\n\n" << "\t\t\t\t\t5. School of Civil Engineering\n\n" << "\t\t\t\t\t6. First Year\n\n" << "\t\t\t\t\t7. Go Back\n\n" << "\t\t\t\t\t8. Go to Main Menu\n\n";
+	cout << "\t\t\t\t\t1. School of Computer Engineering\n\n"
+		 << "\t\t\t\t\t2. School of Electronics Engineering\n\n"
+		 << "\t\t\t\t\t3. School of Electrical Engineering\n\n"
+		 << "\t\t\t\t\t4. School of Mechanical Engineering\n\n"
+		 << "\t\t\t\t\t5. School of Civil Engineering\n\n"
+		 << "\t\t\t\t\t6. First Year\n\n"
+		 << "\t\t\t\t\t7. Go Back\n\n"
+		 << "\t\t\t\t\t8. Go to Main Menu\n\n";
 	cout << "\t\t\t\t\tEnter choice: ";
 	int choice;
 	cin >> choice;
-	cout << endl << endl;
+	cout << endl
+		 << endl;
 	switch (choice)
 	{
 	case 1:
@@ -765,17 +792,22 @@ int Library::booksCategory(int flag)
 	}
 }
 
-//function to modify list of books
+// function to modify list of books
 void Library::modifyBooklist()
 {
 	CLS();
 	cout << "\t\t\t\t\t********** BOOKLIST MODIFICATION **********\n\n";
 	cout << "\t\t\t\t\t>> Choose any option\n\n";
-	cout << "\t\t\t\t\t1. Add Books\n\n" << "\t\t\t\t\t2. Remove Books\n\n" << "\t\t\t\t\t3. Issue Book\n\n" << "\t\t\t\t\t4. Return Book\n\n" << "\t\t\t\t\t5. Go Back\n\n";
+	cout << "\t\t\t\t\t1. Add Books\n\n"
+		 << "\t\t\t\t\t2. Remove Books\n\n"
+		 << "\t\t\t\t\t3. Issue Book\n\n"
+		 << "\t\t\t\t\t4. Return Book\n\n"
+		 << "\t\t\t\t\t5. Go Back\n\n";
 	cout << "\t\t\t\t\tEnter choice: ";
 	int choice;
 	cin >> choice;
-	cout << endl << endl;
+	cout << endl
+		 << endl;
 	switch (choice)
 	{
 	case 1:
@@ -803,7 +835,7 @@ void Library::modifyBooklist()
 	}
 }
 
-//function to add books
+// function to add books
 void Library::addBooks()
 {
 	CLS();
@@ -813,37 +845,67 @@ void Library::addBooks()
 	if (aCategory == 1)
 	{
 		ofstream fout("csBooks.txt", ios::app);
-		fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+		fout << book << endl
+			 << author << endl
+			 << publication << endl
+			 << id << endl
+			 << price << endl
+			 << quantity;
 		fout.close();
 	}
 	if (aCategory == 2)
 	{
 		ofstream fout("eceBooks.txt", ios::app);
-		fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+		fout << book << endl
+			 << author << endl
+			 << publication << endl
+			 << id << endl
+			 << price << endl
+			 << quantity;
 		fout.close();
 	}
 	if (aCategory == 3)
 	{
 		ofstream fout("elecBooks.txt", ios::app);
-		fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+		fout << book << endl
+			 << author << endl
+			 << publication << endl
+			 << id << endl
+			 << price << endl
+			 << quantity;
 		fout.close();
 	}
 	if (aCategory == 4)
 	{
 		ofstream fout("mechBooks.txt", ios::app);
-		fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+		fout << book << endl
+			 << author << endl
+			 << publication << endl
+			 << id << endl
+			 << price << endl
+			 << quantity;
 		fout.close();
 	}
 	if (aCategory == 5)
 	{
 		ofstream fout("civilBooks.txt", ios::app);
-		fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+		fout << book << endl
+			 << author << endl
+			 << publication << endl
+			 << id << endl
+			 << price << endl
+			 << quantity;
 		fout.close();
 	}
 	if (aCategory == 6)
 	{
 		ofstream fout("yearOneBooks.txt", ios::app);
-		fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+		fout << book << endl
+			 << author << endl
+			 << publication << endl
+			 << id << endl
+			 << price << endl
+			 << quantity;
 		fout.close();
 	}
 	cout << "\n\n\t\t\tBook Added Successfully.";
@@ -852,7 +914,7 @@ void Library::addBooks()
 	modifyBooklist();
 }
 
-//function to view list of books
+// function to view list of books
 void Library::viewBooks(int flag)
 {
 	int serial_num = 0;
@@ -1060,7 +1122,7 @@ void Library::viewBooks(int flag)
 		staff();
 }
 
-//function to remove books
+// function to remove books
 void Library::removeBook()
 {
 	CLS();
@@ -1088,7 +1150,12 @@ void Library::removeBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(delBook, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 			}
 		}
 		fout.close();
@@ -1116,7 +1183,12 @@ void Library::removeBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(delBook, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 			}
 		}
 		fout.close();
@@ -1144,7 +1216,12 @@ void Library::removeBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(delBook, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 			}
 		}
 		fout.close();
@@ -1172,7 +1249,12 @@ void Library::removeBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(delBook, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 			}
 		}
 		fout.close();
@@ -1200,7 +1282,12 @@ void Library::removeBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(delBook, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 			}
 		}
 		fout.close();
@@ -1228,7 +1315,12 @@ void Library::removeBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(delBook, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 			}
 		}
 		fout.close();
@@ -1243,7 +1335,7 @@ void Library::removeBook()
 	modifyBooklist();
 }
 
-//function to search books
+// function to search books
 void Library::searchBook(int flag)
 {
 	CLS();
@@ -1254,10 +1346,13 @@ void Library::searchBook(int flag)
 	int var = 1;
 	cout << "\t\t\t\t\t********** SEARCH BOOK **********\n\n";
 	cout << "\t\t\t\t\t>> Choose any option\n\n";
-	cout << "\t\t\t\t\t1. Search by name\n\n" << "\t\t\t\t\t2. Search by ID\n\n" << "\t\t\t\t\t3. Go Back\n\n";
+	cout << "\t\t\t\t\t1. Search by name\n\n"
+		 << "\t\t\t\t\t2. Search by ID\n\n"
+		 << "\t\t\t\t\t3. Go Back\n\n";
 	cout << "\t\t\t\t\tEnter choice: ";
 	cin >> choice;
-	cout << endl << endl;
+	cout << endl
+		 << endl;
 	switch (choice)
 	{
 	case 1:
@@ -1762,7 +1857,7 @@ void Library::searchBook(int flag)
 	}
 }
 
-//function to issue books
+// function to issue books
 void Library::issueBook()
 {
 	CLS();
@@ -1790,9 +1885,19 @@ void Library::issueBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity - 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity - 1;
 			}
 		}
 		fout.close();
@@ -1820,9 +1925,19 @@ void Library::issueBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity - 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity - 1;
 			}
 		}
 		fout.close();
@@ -1850,9 +1965,19 @@ void Library::issueBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity - 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity - 1;
 			}
 		}
 		fout.close();
@@ -1880,9 +2005,19 @@ void Library::issueBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity - 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity - 1;
 			}
 		}
 		fout.close();
@@ -1910,9 +2045,19 @@ void Library::issueBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity - 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity - 1;
 			}
 		}
 		fout.close();
@@ -1940,9 +2085,19 @@ void Library::issueBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity - 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity - 1;
 			}
 		}
 		fout.close();
@@ -1957,7 +2112,7 @@ void Library::issueBook()
 	modifyBooklist();
 }
 
-//funtion to return book
+// funtion to return book
 void Library::returnBook()
 {
 	CLS();
@@ -1985,9 +2140,19 @@ void Library::returnBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity + 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity + 1;
 			}
 		}
 		fout.close();
@@ -2015,9 +2180,19 @@ void Library::returnBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity + 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity + 1;
 			}
 		}
 		fout.close();
@@ -2045,9 +2220,19 @@ void Library::returnBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity + 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity + 1;
 			}
 		}
 		fout.close();
@@ -2075,9 +2260,19 @@ void Library::returnBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity + 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity + 1;
 			}
 		}
 		fout.close();
@@ -2105,9 +2300,19 @@ void Library::returnBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity + 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity + 1;
 			}
 		}
 		fout.close();
@@ -2135,9 +2340,19 @@ void Library::returnBook()
 				fin.getline(publication, 100);
 				fin >> id >> price >> quantity;
 				if (strcmp(bookName, book) != 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity;
 				if (strcmp(bookName, book) == 0)
-					fout << book << endl << author << endl << publication << endl << id << endl << price << endl << quantity + 1;
+					fout << book << endl
+						 << author << endl
+						 << publication << endl
+						 << id << endl
+						 << price << endl
+						 << quantity + 1;
 			}
 		}
 		fout.close();
@@ -2153,7 +2368,7 @@ void Library::returnBook()
 }
 
 /*================================================================================*/
-//FACULTY MANAGEMENT ---->
+// FACULTY MANAGEMENT ---->
 class teacher
 {
 	int a;
@@ -2162,8 +2377,7 @@ class teacher
 	string section[10];
 	string subject;
 
- public:
-
+public:
 	void input()
 	{
 		cout << "\n\t\t\t\t\t Enter teacher name:";
@@ -2227,8 +2441,6 @@ void sbn();
 void sbs();
 void sbsec();
 
-
-
 void Create()
 {
 	system("CLS");
@@ -2237,14 +2449,14 @@ void Create()
 	while (ch == 'y' || ch == 'Y')
 	{
 		t.input();
-		fil.write((char*)& t, sizeof(t));
+		fil.write((char *)&t, sizeof(t));
 		cout << "\n\t\t\t\t\tWant to Continue (Y/N):";
 		cin >> ch;
 	}
 	fil.close();
 }
 
-void Add()              //Function to Add New Record in Data File
+void Add() // Function to Add New Record in Data File
 {
 	system("CLS");
 	char ch = 'y';
@@ -2252,14 +2464,14 @@ void Add()              //Function to Add New Record in Data File
 	while (ch == 'y' || ch == 'Y')
 	{
 		t.input();
-		fil.write((char*)& t, sizeof(t));
+		fil.write((char *)&t, sizeof(t));
 		cout << "\n\t\t\t\t\tWant to Continue (Y/N):";
 		cin >> ch;
 	}
 	fil.close();
 }
 
-void Display() //Function to Display All Record from Data File
+void Display() // Function to Display All Record from Data File
 {
 	system("CLS");
 	fil.open("teacher.dat", ios::in | ios::binary);
@@ -2268,7 +2480,7 @@ void Display() //Function to Display All Record from Data File
 		cout << "\n\t\t\t\t\tFile not created\n";
 		exit(0);
 	}
-	fil.read((char*)& t, sizeof(t));
+	fil.read((char *)&t, sizeof(t));
 	if (fil.eof())
 	{
 		cout << "\n\t\t\t\t\tNo records present.\n";
@@ -2280,12 +2492,12 @@ void Display() //Function to Display All Record from Data File
 		while (!fil.eof())
 		{
 			t.show();
-			fil.read((char*)& t, sizeof(t));
+			fil.read((char *)&t, sizeof(t));
 		}
 	}
 	fil.close();
 }
-void sbn()//function which searches record using name of faculty
+void sbn() // function which searches record using name of faculty
 {
 	system("CLS");
 	fil.open("teacher.dat", ios::in | ios::binary);
@@ -2294,7 +2506,7 @@ void sbn()//function which searches record using name of faculty
 		cout << "\n\t\t\t\t\tFile not created\n";
 		exit(0);
 	}
-	fil.read((char*)& t, sizeof(t));
+	fil.read((char *)&t, sizeof(t));
 	if (fil.eof())
 	{
 		cout << "\n\t\t\t\t\tNo records present.\n";
@@ -2312,11 +2524,11 @@ void sbn()//function which searches record using name of faculty
 			t.show();
 			return;
 		}
-		fil.read((char*)& t, sizeof(t));
+		fil.read((char *)&t, sizeof(t));
 	}
 	cout << "\n\t\t\t\t\tFaculty does not exist.\n";
 }
-void sbs()//function which searches record using subject taught by faculty
+void sbs() // function which searches record using subject taught by faculty
 {
 	system("CLS");
 	fil.open("teacher.dat", ios::in | ios::binary);
@@ -2325,7 +2537,7 @@ void sbs()//function which searches record using subject taught by faculty
 		cout << "\n\t\t\t\t\tFile not created\n";
 		exit(0);
 	}
-	fil.read((char*)& t, sizeof(t));
+	fil.read((char *)&t, sizeof(t));
 	if (fil.eof())
 	{
 		cout << "\n\t\t\t\t\tNo records present.\n";
@@ -2343,11 +2555,11 @@ void sbs()//function which searches record using subject taught by faculty
 			t.show();
 			return;
 		}
-		fil.read((char*)& t, sizeof(t));
+		fil.read((char *)&t, sizeof(t));
 	}
 	cout << "\n\t\t\t\t\tFaculty does not exist.\n";
 }
-void sbsec()//function which searches record using sections taught by faculty
+void sbsec() // function which searches record using sections taught by faculty
 {
 	system("CLS");
 	fil.open("teacher.dat", ios::in | ios::binary);
@@ -2356,7 +2568,7 @@ void sbsec()//function which searches record using sections taught by faculty
 		cout << "\n\t\t\t\t\tFile not created\n";
 		exit(0);
 	}
-	fil.read((char*)& t, sizeof(t));
+	fil.read((char *)&t, sizeof(t));
 	if (fil.eof())
 	{
 		cout << "\n\t\t\t\t\tNo records present.\n";
@@ -2377,16 +2589,16 @@ void sbsec()//function which searches record using sections taught by faculty
 					cout << "\n\t\t\t\t\tFaculty found, here are the details :\n";
 				t.show();
 				cout << "\n";
-				fil.read((char*)& t, sizeof(t));
+				fil.read((char *)&t, sizeof(t));
 				if (!fil.eof())
 					j = -1;
 			}
-		fil.read((char*)& t, sizeof(t));
+		fil.read((char *)&t, sizeof(t));
 	}
 	if (i == 0)
 		cout << "\n\t\t\t\t\tFaculty does not exist.\n";
 }
-void Delete() //Function to Delete Particular Record from Data File
+void Delete() // Function to Delete Particular Record from Data File
 {
 	system("CLS");
 	string srch;
@@ -2401,492 +2613,269 @@ void Delete() //Function to Delete Particular Record from Data File
 	cout << "\n\t\t\t\t\tEnter the name of the teacher whose record is to be deleted :";
 	cin.ignore();
 	getline(cin, srch);
-	fil.read((char*)& t, sizeof(t));
+	fil.read((char *)&t, sizeof(t));
 	while (!fil.eof())
 	{
 		if (srch != t.getnm())
 		{
-			o.write((char*)& t, sizeof(t));
-			//break;
+			o.write((char *)&t, sizeof(t));
+			// break;
 		}
-		fil.read((char*)& t, sizeof(t));
+		fil.read((char *)&t, sizeof(t));
 	}
 	fil.close();
 	o.close();
 	remove("teacher.dat");
 	rename("copy.dat", "teacher.dat");
-
 }
 
 class hostel
 
 {
-
-    int room_no;
-
-    char name[30];
-
-    char address[50];
-
-    char phone[10];
-
- 
-
-    public:
-
-   int main_menu();   
-
-    int add();       
-
-  int display();  
-
-    int rooms();   
-
-    int edit();   
-
-    int check(int);   
-
-    int modify(int);   
-
-    int delete_rec(int);   
-
+	int room_no;
+	char name[30];
+	char address[50];
+	char phone[10];
+public:
+	int main_menu();
+	int add();
+	int display();
+	int rooms();
+	int edit();
+	int check(int);
+	int modify(int);
+	int delete_rec(int);
 };
 
-
-
 int hostel::main_menu()
-
 {
-    int choice=0;
-    while(choice!=5)
-    {       
-        cout<<"\n\t\t\t\t*************";
-        cout<<"\n\t\t\t\t* MAIN MENU *";
-        cout<<"\n\t\t\t\t*************";
-        cout<<"\n\n\n\t\t\t1.Book A Room";
-        cout<<"\n\t\t\t2.student Record";
-        cout<<"\n\t\t\t3.Rooms Allotted";
-        cout<<"\n\t\t\t4.Edit Record";
-        cout<<"\n\t\t\t5.Exit";
-        cout<<"\n\n\t\t\tEnter Your Choice: ";
-        cin>>choice;
-        switch(choice)
-        {
-            case 1: add();
-                    break;
-            case 2: display();
-                    break;
-            case 3: rooms();
-                    break;
-            case 4: edit();
-                    break;
-            case 5: break;
-            default:
-                    {
-                        cout<<"\n\n\t\t\tWrong choice!!!";
-                    	cout<<"\n\t\t\tPress any key to continue!!";
-                        return 0;
-                       system("pause");
-                    }
-        }
-    }
+	int choice = 0;
+	while (choice != 5)
+	{
+		cout << "\n\t\t\t\t*************";
+		cout << "\n\t\t\t\t* MAIN MENU *";
+		cout << "\n\t\t\t\t*************";
+		cout << "\n\n\n\t\t\t1.Book A Room";
+		cout << "\n\t\t\t2.student Record";
+		cout << "\n\t\t\t3.Rooms Allotted";
+		cout << "\n\t\t\t4.Edit Record";
+		cout << "\n\t\t\t5.Exit";
+		cout << "\n\n\t\t\tEnter Your Choice: ";
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+			add();
+			break;
+		case 2:
+			display();
+			break;
+		case 3:
+			rooms();
+			break;
+		case 4:
+			edit();
+			break;
+		case 5:
+			break;
+		default:
+		{
+			cout << "\n\n\t\t\tWrong choice!!!";
+			cout << "\n\t\t\tPress any key to continue!!";
+			return 0;
+			system("pause");
+		}
+		}
+	}
 }
 
 int hostel::add()
-{ 
-    int r,flag;
-    ofstream fout("Record.txt",ios::app);
-    cout<<"\n Enter Customer Detalis";
-    cout<<"\n **********************";
-    cout<<"\n\n Room no: ";
-    cin>>r;
-    flag=check(r); 
-    if(flag)
-        cout<<"\n Sorry..!!!Room is already booked";
-    else
-    {
-        room_no=r;
-        cout<<"\n Name:\t ";
-        cin>>name;
-        cout<<"\n Address:\t ";
-        cin>>address;
-        cout<<"\n Phone No:\t ";
-        cin>>phone;
-              cout<<endl;
-        fout.write((char*)this,sizeof(*this));
-        cout<<"\n Room is booked!!!";
-    }
-
-   
-
-    cout<<"\n Press any key to continue!!";
-
-  system("pause");
-
-    fout.close();
-
-    return 0;
-
+{
+	int r, flag;
+	ofstream fout("Record.txt", ios::app);
+	cout << "\n Enter Customer Detalis";
+	cout << "\n **********************";
+	cout << "\n\n Room no: ";
+	cin >> r;
+	flag = check(r);
+	if (flag)
+		cout << "\n Sorry..!!!Room is already booked";
+	else
+	{
+		room_no = r;
+		cout << "\n Name:\t ";
+		cin >> name;
+		cout << "\n Address:\t ";
+		cin >> address;
+		cout << "\n Phone No:\t ";
+		cin >> phone;
+		cout << endl;
+		fout.write((char *)this, sizeof(*this));
+		cout << "\n Room is booked!!!";
+	}
+	cout << "\n Press any key to continue!!";
+	system("pause");
+	fout.close();
+	return 0;
 }
-
-
 
 int hostel::display()
-
 {
-
-  
-
-    ifstream fin("Record.txt",ios::in); 
-
-    int r;
-
-    cout<<"\n Enter room no: ";
-
-    cin>>r;
-
-   
-
-    while(!fin.eof())
-
-    {
-
-        fin.read((char*)this,sizeof(*this));
-
-       
-
-           if(room_no = r)
-
-                 {
-
-            cout<<"\n Cusromer Details";
-
-            cout<<"\n ****************";
-
-            cout<<"\n\n Room no: "<<room_no;
-
-            cout<<"\n Name: "<<name;
-
-            cout<<"\n Address: "<<address;
-
-            cout<<"\n Phone no: "<<phone;
-
-           
-
-              }
-
-             
-
-  
-
-       else{
-
-        cout<<"\n Sorry Room no. not found or vacant!!";
-
-       
-
-              cout<<"\n\n Press any key to continue!!";}
-
-    system("pause");
-
-    fin.close();
-
-    return 0;
-
-              }}
-
-
+	ifstream fin("Record.txt", ios::in);
+	int r;
+	cout << "\n Enter room no: ";
+	cin >> r;
+	while (!fin.eof())
+	{
+		fin.read((char *)this, sizeof(*this));
+		if (room_no = r)
+		{
+			cout << "\n Cusromer Details";
+			cout << "\n ****************";
+			cout << "\n\n Room no: " << room_no;
+			cout << "\n Name: " << name;
+			cout << "\n Address: " << address;
+			cout << "\n Phone no: " << phone;
+		}
+		else
+		{
+			cout << "\n Sorry Room no. not found or vacant!!";
+			cout << "\n\n Press any key to continue!!";
+		}
+		system("pause");
+		fin.close();
+		return 0;
+	}
+}
 
 int hostel::rooms()
-
 {
-
- 
-
-    ifstream fin("Record.txt",ios::in);
-
-    cout<<"\n\t\t\tList Of Rooms Allotted";
-
-    cout<<"\n\t\t\t*********************";
-
-    cout<<"\n\n Room No.\tName\t\tAddress\t\tPhone No.\n";
-
- 
-
-       while(!fin.eof())
-
-    {
-
-
-
-        fin.read((char*)this,sizeof(*this));
-
-        cout<<"\n\n "<<room_no<<"\t\t"<<name;
-
-        cout<<"\t\t"<<address<<"\t\t"<<phone;
-
-             
-
-       }
-
-
-
-    cout<<"\n\n\n\t\t\tPress any key to continue!!";
-
-       system("pause");
-
-    fin.close();
-
-    return 0;
-
+	ifstream fin("Record.txt", ios::in);
+	cout << "\n\t\t\tList Of Rooms Allotted";
+	cout << "\n\t\t\t*********************";
+	cout << "\n\n Room No.\tName\t\tAddress\t\tPhone No.\n";
+	while (!fin.eof())
+	{
+		fin.read((char *)this, sizeof(*this));
+		cout << "\n\n " << room_no << "\t\t" << name;
+		cout << "\t\t" << address << "\t\t" << phone;
+	}
+	cout << "\n\n\n\t\t\tPress any key to continue!!";
+	system("pause");
+	fin.close();
+	return 0;
 }
-
-
 
 int hostel::edit()
-
 {
 
-  
-
-    int choice,r;
-
-    
-
-    cout<<"\n EDIT MENU";
-
-    cout<<"\n *********";
-
-    cout<<"\n\n 1.Modify Customer Record";
-
-    cout<<"\n 2.Delete Customer Record";
-
-   
-
-    cout<<"\n Enter your choice: ";
-
-    cin>>choice;
-
-   
-
-       cout<<"\n Enter room no: ";
-
-    cin>>r;
-
-   
-
-   
-
-    switch(choice)
-
-    {
-
-        case 1: modify(r);
-
-                break;
-
-        case 2: delete_rec(r);
-
-                break;
-
-        default: cout<<"\n Wrong Choice!!";
-
-    }
-
-      
-
-    cout<<"\n Press any key to continue!!!";
-
-    return 0;
-
-  system("pause");
-
+	int choice, r;
+	cout << "\n EDIT MENU";
+	cout << "\n *********";
+	cout << "\n\n 1.Modify Customer Record";
+	cout << "\n 2.Delete Customer Record";
+	cout << "\n Enter your choice: ";
+	cin >> choice;
+	cout << "\n Enter room no: ";
+	cin >> r;
+	switch (choice)
+	{
+	case 1:
+		modify(r);
+		break;
+	case 2:
+		delete_rec(r);
+		break;
+	default:
+		cout << "\n Wrong Choice!!";
+	}
+	cout << "\n Press any key to continue!!!";
+	return 0;
+	system("pause");
 }
-
-
 
 int hostel::check(int r)
-
 {
-
-    int flag=0;
-
-    ifstream fin("Record.txt",ios::in);
-
-    while(!fin.eof())
-
-    {
-
-        fin.read((char*)this,sizeof(*this));
-
-        if(room_no==r)
-
-        {
-
-            flag=1;
-
-                break;
-
-        }
-
-    }
-
-   
-
-    fin.close();
-
-    return(flag);
-
+	int flag = 0;
+	ifstream fin("Record.txt", ios::in);
+	while (!fin.eof())
+	{
+		fin.read((char *)this, sizeof(*this));
+		if (room_no == r)
+		{
+			flag = 1;
+			break;
+		}
+	}
+	fin.close();
+	return (flag);
 }
 
-
-
 int hostel::modify(int r)
-
 {
-
-    long pos , flag;
-
-    fstream file("Record.txt",ios::in|ios::out|ios::binary);
-
-    flag=0;
-
-    while(!file.eof())
-
-       {
-
-         pos=file.tellg(); 
-
-        file.read((char*)this,sizeof(*this));
-
-        if(room_no==r)
-
-              {
-
-            cout<<"\n Enter New Details";
-
-            cout<<"\n *****************";
-
-            cout<<"\n Name: ";
-
-            cin>>name;
-
-            cout<<" Address: ";
-
-            cin>>address;
-
-            cout<<" Phone no: ";
-
-            cin>>phone;
-
-            file.seekg(pos);
-
-           
-
-            file.write((char*)this,sizeof(*this));
-
-            cout<<"\n Record is modified!!";
-
-               flag=1;
-
-            break;
-
-              }}
-
-   
-
-    if(flag==0)
-
-        
-
-                     cout<<"\n Sorry Room no. not found or vacant!!";
-
-      
-
-              file.close();
-
-              return 0;
-
-       }
-
-
+	long pos, flag;
+	fstream file("Record.txt", ios::in | ios::out | ios::binary);
+	flag = 0;
+	while (!file.eof())
+	{
+		pos = file.tellg();
+		file.read((char *)this, sizeof(*this));
+		if (room_no == r)
+		{
+			cout << "\n Enter New Details";
+			cout << "\n *****************";
+			cout << "\n Name: ";
+			cin >> name;
+			cout << " Address: ";
+			cin >> address;
+			cout << " Phone no: ";
+			cin >> phone;
+			file.seekg(pos);
+			file.write((char *)this, sizeof(*this));
+			cout << "\n Record is modified!!";
+			flag = 1;
+			break;
+		}
+	}
+	if (flag == 0)
+		cout << "\n Sorry Room no. not found or vacant!!";
+	file.close();
+	return 0;
+}
 
 int hostel::delete_rec(int r)
-
 {
-
-    int flag=0;
-
-    char ch;
-
-    ifstream fin("Record.txt",ios::in);
-
-    ofstream fout("temp.txt",ios::out);
-
-   
-
-    while(!fin.eof())
-
-    {
-
-        fin.read((char*)this,sizeof(*this));
-
-        if(room_no==r)
-
-        {
-
-            cout<<"\n Name: "<<name;
-
-            cout<<"\n Address: "<<address;
-
-            cout<<"\n Pone No: "<<phone;
-
-            cout<<"\n\n Do you want to delete this record(y/n): ";
-
-            cin>>ch;
-
-           
-
-            if(ch=='n')
-
-            fout.write((char*)this,sizeof(*this));
-
-           
-
-            flag=1;
-
-        }
-
-        else
-
-            fout.write((char*)this,sizeof(*this));
-
-    }
-
-   
-
-    fin.close();
-
-    fout.close();
-
-   
-
-    if(flag==0)
-
-        cout<<"\n Sorry room no. not found or vacant!!";
-
-    else
-
-    {
-
-        remove("Record.txt");
-
-        rename("temp.txt","Record.txt");
-
-        return 0;
-
-    }
-
+	int flag = 0;
+	char ch;
+	ifstream fin("Record.txt", ios::in);
+	ofstream fout("temp.txt", ios::out);
+	while (!fin.eof())
+	{
+		fin.read((char *)this, sizeof(*this));
+		if (room_no == r)
+		{
+			cout << "\n Name: " << name;
+			cout << "\n Address: " << address;
+			cout << "\n Pone No: " << phone;
+			cout << "\n\n Do you want to delete this record(y/n): ";
+			cin >> ch;
+			if (ch == 'n')
+				fout.write((char *)this, sizeof(*this));
+			flag = 1;
+		}
+		else
+			fout.write((char *)this, sizeof(*this));
+	}
+	fin.close();
+	fout.close();
+	if (flag == 0)
+		cout << "\n Sorry room no. not found or vacant!!";
+	else
+	{
+		remove("Record.txt");
+		rename("temp.txt", "Record.txt");
+		return 0;
+	}
 }
 
 /*================================================================================*/
@@ -2903,7 +2892,8 @@ int main()
 	int ch2;
 	//	load();
 
-	do {
+	do
+	{
 		CLS();
 		RULE("*");
 		cout << "\t\t\tUNIVERSITY MANAGEMENT SYSTEM";
@@ -2920,7 +2910,8 @@ int main()
 		{
 			fflush(stdin);
 			//			load();
-			do {
+			do
+			{
 			studentMenu:
 				CLS();
 				RULE("*");
@@ -3057,7 +3048,8 @@ int main()
 							cout << "##### Student " << i + 1 << " #####" << endl;
 							s[i].getSData();
 						}
-						cout << endl << endl;
+						cout << endl
+							 << endl;
 						break;
 					}
 					case 2:
@@ -3145,9 +3137,11 @@ int main()
 			int opt;
 			fflush(stdin);
 			load();
-			do {
+			do
+			{
 				CLS();
-				cout << "\n\t\t\t\t\t* * * * * * FACULTY SECTION * * * * * *\n" << endl;
+				cout << "\n\t\t\t\t\t* * * * * * FACULTY SECTION * * * * * *\n"
+					 << endl;
 				cout << "\n\t\t\t\t\t1. Create Data File" << endl;
 				cout << "\n\t\t\t\t\t2. Add New Record in Data File" << endl;
 				cout << "\n\t\t\t\t\t3. Display Record From Data File" << endl;
@@ -3195,12 +3189,14 @@ int main()
 		}
 		if (ch5 == '4')
 		{
-			hostel h;  
-			cout<<"\n\t\t\t****************************";
-			cout<<"\n\t\t\t* HOSTEL MANAGEMENT PROJECT *";
-			cout<<"\n\t\t\t****************************";
-			cout<<"\n\n\n\n\n\t\t\t\tPress any key to continue!!";
+			system("cls");
+			hostel h;
+			cout << "\n\t\t\t****************************";
+			cout << "\n\t\t\t* HOSTEL MANAGEMENT PROJECT *";
+			cout << "\n\t\t\t****************************";
+			cout << "\n\n\n\n\n\t\t\t\tPress any key to continue!!";
 			system("pause");
+			system("cls");
 			h.main_menu();
 			system("pause");
 		}
